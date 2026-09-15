@@ -81,8 +81,8 @@ export const DESTINATIONS = [
     budget: "₹20,000 – ₹45,000",
     travel_mode: "Fly to Leh; acclimatise 2 days before roads",
     images: [
-      "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=1600&q=80",
+      "/destinations/ladakh-1.jpg",
+      "/destinations/ladakh-2.jpg",
     ],
     experiences: [
       { title: "Pangong Tso Day Trip", type: "Adventure", price: 3500, price_label: "₹3,500", dur: "14 hrs", desc: "Chang La pass, three Spangmik viewpoints and lakeside chai with Changpa nomads.", img: "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80" },
@@ -103,7 +103,7 @@ export const DESTINATIONS = [
     budget: "₹12,000 – ₹30,000",
     travel_mode: "Fly to Udaipur or overnight train from Delhi",
     images: [
-      "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1600&q=80",
+      "/destinations/udaipur.jpg",
       "https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format&fit=crop&w=1600&q=80",
     ],
     experiences: [
@@ -125,7 +125,7 @@ export const DESTINATIONS = [
     budget: "₹15,000 – ₹35,000",
     travel_mode: "Fly to Srinagar; road transfers to Gulmarg / Pahalgam",
     images: [
-      "https://images.unsplash.com/photo-1566837945700-30057527ade0?auto=format&fit=crop&w=1600&q=80",
+      "/destinations/kashmir.jpg",
       "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1600&q=80",
     ],
     experiences: [
@@ -169,7 +169,7 @@ export const DESTINATIONS = [
     budget: "₹8,000 – ₹16,000",
     travel_mode: "Overnight train to Hospet, then 30 min tuk-tuk",
     images: [
-      "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1600&q=80",
+      "/destinations/hampi.jpg",
       "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1600&q=80",
     ],
     experiences: [
@@ -191,7 +191,7 @@ export const DESTINATIONS = [
     budget: "₹12,000 – ₹24,000",
     travel_mode: "Fly to Guwahati, then 3 hr drive to Shillong",
     images: [
-      "https://images.unsplash.com/photo-1598887142487-3c854d51eabb?auto=format&fit=crop&w=1600&q=80",
+      "/destinations/meghalaya.jpg",
       "https://images.unsplash.com/photo-1502085671122-2d218cd434e6?auto=format&fit=crop&w=1600&q=80",
     ],
     experiences: [
@@ -213,7 +213,7 @@ export const DESTINATIONS = [
     budget: "₹7,000 – ₹15,000",
     travel_mode: "Direct trains & flights; arrive early morning",
     images: [
-      "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1600&q=80",
+      "/destinations/varanasi.jpg",
       "https://images.unsplash.com/photo-1609920658906-8223bd289001?auto=format&fit=crop&w=1600&q=80",
     ],
     experiences: [
@@ -257,7 +257,7 @@ export const DESTINATIONS = [
     budget: "₹8,000 – ₹18,000",
     travel_mode: "3 hr drive from Chennai or the scenic Pondy Express",
     images: [
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80",
+      "/destinations/pondicherry.jpg",
       "https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=1600&q=80",
     ],
     experiences: [

@@ -41,6 +41,25 @@ export default function Footer() {
           </ul>
         </div>
       </div>
+      <div className="border-t border-slate-100">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-8 gap-y-2 px-4 py-5 text-sm text-slate-600">
+          <span className="font-bold uppercase tracking-wider text-teal-700">Contact us</span>
+          <a href="mailto:yatrasetu@gmail.com" className="flex items-center gap-1.5 transition-colors hover:text-teal-700">
+            <span aria-hidden>✉️</span> yatrasetu@gmail.com
+          </a>
+          <a href="tel:+919987230415" className="flex items-center gap-1.5 transition-colors hover:text-teal-700">
+            <span aria-hidden>📞</span> +91 9987230415
+          </a>
+          <a
+            href="https://www.instagram.com/yatrasetu_make_travel_personal"
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1.5 transition-colors hover:text-teal-700"
+          >
+            <span aria-hidden>📷</span> @yatrasetu_make_travel_personal
+          </a>
+        </div>
+      </div>
       <div className="border-t border-slate-100 py-4 text-center text-xs text-slate-400">
         Smart India Hackathon 2026 prototype · Yatra Setu · Built with ❤️ for local communities
       </div>
