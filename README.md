@@ -16,7 +16,7 @@ npm install        # once
 npm run dev        # development (Turbopack)
 ```
 
-Open **http://localhost:3000** (if that port is busy, Next picks the next free one — the URL is printed in the terminal).
+Open **http://localhost:3050** (if that port is busy, Next picks the next free one — the URL is printed in the terminal).
 
 Production mode:
 
