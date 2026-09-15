@@ -6,7 +6,8 @@ export default function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-2.5">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-teal-700 text-lg text-white">🛶</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Yatra Setu logo" className="h-10 w-10 object-contain" />
             <div>
               <p className="text-lg font-extrabold tracking-tight text-teal-900">Yatra Setu</p>
               <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-teal-600">

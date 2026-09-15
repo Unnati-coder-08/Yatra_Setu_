@@ -16,9 +16,8 @@ const LINKS = [
 function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2.5">
-      <span className="grid h-10 w-10 place-items-center rounded-xl bg-teal-700 text-lg text-white shadow-md shadow-teal-900/30">
-        🛶
-      </span>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/logo.png" alt="Yatra Setu logo" className="h-10 w-10 object-contain" />
       <span className="leading-tight">
         <span className="block text-[17px] font-extrabold tracking-tight text-teal-900">Yatra Setu</span>
         <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-teal-600">
