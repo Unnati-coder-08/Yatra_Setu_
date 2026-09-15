@@ -24,8 +24,8 @@ export default function HostLanding() {
         <div className="relative overflow-hidden rounded-3xl shadow-xl">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="https://images.unsplash.com/photo-1598887142487-3c854d51eabb?auto=format&fit=crop&w=1920&q=80"
-            alt="Living root bridge, Meghalaya"
+            src="/host-hero.jpg"
+            alt="A local host welcoming travellers with their luggage"
             className="absolute inset-0 h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-teal-950/85 via-teal-900/50 to-transparent" />
