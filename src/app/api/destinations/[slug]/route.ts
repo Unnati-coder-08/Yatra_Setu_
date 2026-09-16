@@ -16,8 +16,10 @@ export async function GET(req: Request, ctx: { params: Promise<{ slug: string }>
 
   const experiences = db.prepare("SELECT * FROM experiences WHERE dest_slug = ? ORDER BY id").all(slug);
   const guides = db.prepare("SELECT * FROM guides WHERE dest_slug = ? ORDER BY rating DESC").all(slug);
-  const homestays = db.prepare("SELECT * FROM homestays WHERE dest_slug = ? ORDER BY rating DESC").all(slug);
+  const homestays = db.prepare("SELECT * FROM homestays WHERE dest_slug = ? ORDER BY rating DESC").all(slug) as any[];
   const reviews = db.prepare("SELECT * FROM reviews WHERE dest_slug = ? ORDER BY id DESC").all(slug);
+  // Hidden gems contributed by local guides (feature: guide-listed places)
+  const guidePlaces = db.prepare("SELECT * FROM guide_places WHERE dest_slug = ? ORDER BY id DESC").all(slug);
 
   let saved = false;
   const user = await getCurrentUser();
@@ -30,7 +32,8 @@ export async function GET(req: Request, ctx: { params: Promise<{ slug: string }>
     destination: parse(dest, ["categories", "images"]),
     experiences,
     guides,
-    homestays,
+    homestays: homestays.map((h) => ({ ...h, images: JSON.parse(h.images || "[]") })),
+    guide_places: guidePlaces,
     reviews,
     saved,
   });

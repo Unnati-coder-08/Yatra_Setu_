@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getDb } from "@/lib/db.mjs";
 import { getCurrentUser } from "@/lib/auth";
 
 export async function GET() {

@@ -52,7 +52,23 @@ export interface Homestay {
   price: number;
   rating: number;
   tagline: string;
+  images?: string[];
   host_user_id?: number | null;
+}
+
+// A local spot contributed by a guide host (saved in guide_places, shown on
+// destination pages and inside the Plan Trip itinerary builder)
+export interface GuidePlace {
+  id: number;
+  host_user_id: number | null;
+  host_name: string;
+  guide_id: number | null;
+  dest_slug: string;
+  title: string;
+  desc: string;
+  img: string;
+  price: number;
+  dur: string;
 }
 
 export interface Review {
@@ -112,6 +128,7 @@ export interface User {
   city: string;
   phone: string;
   avatar: string;
+  verification_status?: string; // none | pending | verified
 }
 
 export interface DestinationDetail {
@@ -119,6 +136,7 @@ export interface DestinationDetail {
   experiences: Experience[];
   guides: Guide[];
   homestays: Homestay[];
+  guide_places: GuidePlace[];
   reviews: Review[];
   saved: boolean;
 }

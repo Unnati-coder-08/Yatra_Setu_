@@ -3,11 +3,12 @@
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/useAuth";
+import { fileToShrunkDataUrl } from "@/lib/image";
 
 function LoginInner() {
   const router = useRouter();
   const params = useSearchParams();
-  const { login, signup } = useAuth();
+  const { login, signup, refresh } = useAuth();
   const [tab, setTab] = useState<"login" | "signup">(params.get("tab") === "signup" ? "signup" : "login");
 
   const [name, setName] = useState("");
@@ -15,7 +16,9 @@ function LoginInner() {
   const [phone, setPhone] = useState("");
   const [city, setCity] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<"traveler" | "host">("traveler");
+  const [role, setRole] = useState<"traveler" | "host" | "guide">("traveler");
+  const [idType, setIdType] = useState("aadhaar");
+  const [idDoc, setIdDoc] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -31,6 +34,28 @@ function LoginInner() {
   async function doSignup() {
     setBusy(true);
     setError("");
+    // Guides register through the ID-verification endpoint
+    if (role === "guide") {
+      if (!idDoc) {
+        setBusy(false);
+        setError("Please attach a photo of your ID document to verify your guide profile.");
+        return;
+      }
+      const r = await fetch("/api/auth/guide-signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, phone, city, password, id_doc_type: idType, id_doc: idDoc }),
+      });
+      setBusy(false);
+      const d = await r.json().catch(() => ({}));
+      if (r.ok) {
+        await refresh();
+        router.push("/host/dashboard");
+      } else {
+        setError(d.error || "Guide registration failed");
+      }
+      return;
+    }
     const r = await signup({ name, email, phone, city, password, role });
     setBusy(false);
     if (r.ok) router.push(role === "host" ? "/host" : "/dashboard");
@@ -112,29 +137,68 @@ function LoginInner() {
               onKeyDown={(e) => e.key === "Enter" && (tab === "login" ? password && email && doLogin() : null)}
             />
           </div>
-          {tab === "signup" && (
-            <div>
-              <span className="label">I am a</span>
-              <div className="grid grid-cols-2 gap-3">
-                {(
-                  [
-                    ["traveler", "🧳", "Traveller", "Explore & plan trips"],
-                    ["host", "🏠", "Local Host", "Guide & earn from my area"],
-                  ] as const
-                ).map(([val, icon, label, sub]) => (
-                  <button
-                    key={val}
-                    onClick={() => setRole(val)}
-                    className={`rounded-2xl border-2 p-3.5 text-left transition ${
-                      role === val ? "border-teal-600 bg-teal-50/60" : "border-slate-200 hover:border-slate-300"
-                    }`}
-                  >
-                    <p className="text-xl">{icon}</p>
-                    <p className="mt-1 text-sm font-bold text-slate-800">{label}</p>
-                    <p className="text-[11px] text-slate-500">{sub}</p>
-                  </button>
-                ))}
+          {tab === "signup" && (              <div>
+                <span className="label">I am a</span>
+                <div className="grid grid-cols-3 gap-2">
+                  {(
+                    [
+                      ["traveler", "🧳", "Traveller", "Explore & plan"],
+                      ["host", "🏠", "Local Host", "Stay & earn"],
+                      ["guide", "🛡️", "Local Guide", "ID-verified ✓"],
+                    ] as const
+                  ).map(([val, icon, label, sub]) => (
+                    <button
+                      key={val}
+                      onClick={() => setRole(val)}
+                      className={`rounded-2xl border-2 p-3 text-left transition ${
+                        role === val ? "border-teal-600 bg-teal-50/60" : "border-slate-200 hover:border-slate-300"
+                      }`}
+                    >
+                      <p className="text-xl">{icon}</p>
+                      <p className="mt-1 text-sm font-bold text-slate-800">{label}</p>
+                      <p className="text-[10px] text-slate-500">{sub}</p>
+                    </button>
+                  ))}
+                </div>
+                {role === "guide" && (
+                  <p className="mt-2 rounded-lg bg-teal-50/70 px-3 py-2 text-[11px] leading-relaxed text-teal-800">
+                    🛡️ Guides verify their identity with a government ID — travellers see a <b>Verified Guide ✓</b> badge on your profile before connecting.
+                  </p>
+                )}
               </div>
+          )}
+
+          {tab === "signup" && role === "guide" && (
+            <div className="space-y-3 rounded-2xl border border-teal-100 bg-teal-50/40 p-4">
+              <p className="text-sm font-bold text-slate-800">🪪 Identity verification</p>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <span className="label">ID type</span>
+                  <select className="input" value={idType} onChange={(e) => setIdType(e.target.value)}>
+                    <option value="aadhaar">Aadhaar</option>
+                    <option value="pan">PAN card</option>
+                    <option value="driving_license">Driving licence</option>
+                    <option value="voter_id">Voter ID</option>
+                    <option value="passport">Passport</option>
+                  </select>
+                </div>
+                <div>
+                  <span className="label">ID photo</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="input !py-2 text-xs"
+                    onChange={async (e) => {
+                      const f = e.target.files?.[0];
+                      if (f) setIdDoc(await fileToShrunkDataUrl(f, 1000));
+                    }}
+                  />
+                </div>
+              </div>
+              {idDoc && (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img src={idDoc} alt="ID preview" className="h-20 rounded-xl border border-slate-200 object-cover" />
+              )}
             </div>
           )}
 
@@ -145,7 +209,7 @@ function LoginInner() {
             disabled={busy}
             onClick={() => (tab === "login" ? doLogin() : doSignup())}
           >
-            {busy ? "Please wait…" : tab === "login" ? "Login" : "Create account"}
+            {busy ? "Please wait…" : tab === "login" ? "Login" : role === "guide" ? "Verify & create guide account" : "Create account"}
           </button>
 
           <div className="relative py-1 text-center">

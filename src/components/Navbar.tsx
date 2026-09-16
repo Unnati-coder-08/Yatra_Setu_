@@ -12,7 +12,6 @@ const LINKS = [
   { href: "/host", label: "Become a Host" },
   { href: "/about", label: "About" },
 ];
-
 function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2.5">
@@ -114,6 +113,14 @@ export default function Navbar() {
               </Link>
             </>
           )}
+          <Link
+            href="/emergency"
+            className="inline-flex items-center gap-1.5 rounded-full bg-rose-600 px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-rose-700"
+            title="SOS, emergency numbers, share location, nearby help"
+          >
+            <span className="animate-pulse">🆘</span>
+            <span className="hidden sm:inline">SOS</span>
+          </Link>
           <button
             className="grid h-9 w-9 place-items-center rounded-full text-slate-600 hover:bg-slate-100 lg:hidden"
             onClick={() => setOpen((v) => !v)}
@@ -137,6 +144,12 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
+          <Link
+            href="/emergency"
+            className="mt-2 block rounded-lg bg-rose-600 px-3 py-2.5 text-sm font-bold text-white"
+          >
+            🆘 Emergency / SOS
+          </Link>
         </div>
       )}
     </header>

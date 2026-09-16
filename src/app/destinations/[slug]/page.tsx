@@ -18,7 +18,8 @@ export default function DestinationPage({ params }: { params: Promise<{ slug: st
   const [data, setData] = useState<DestinationDetail | null>(null);
   const [saved, setSaved] = useState(false);
   const [book, setBook] = useState<BookableItem | null>(null);
-  const [tab, setTab] = useState<"exp" | "guides" | "stays">("exp");
+  const [tab, setTab] = useState<"exp" | "guides" | "stays" | "places">("exp");
+  const [stayPhoto, setStayPhoto] = useState<Record<number, number>>({});
   const [reviewText, setReviewText] = useState("");
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewMsg, setReviewMsg] = useState("");
@@ -155,11 +156,12 @@ export default function DestinationPage({ params }: { params: Promise<{ slug: st
 
           {/* tabs: experiences / guides / homestays */}
           <div className="mt-6 flex gap-2">
-            {(
+            {            (
               [
                 ["exp", "Experiences"],
                 ["guides", "Local Guides"],
                 ["stays", "Homestays"],
+                ["places", "Guide's Picks"],
               ] as const
             ).map(([key, label]) => (
               <button
@@ -208,8 +210,16 @@ export default function DestinationPage({ params }: { params: Promise<{ slug: st
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={g.img} alt={g.name} className="h-14 w-14 rounded-full object-cover ring-2 ring-teal-100" />
                     <div className="min-w-0">
-                      <p className="flex items-center gap-1.5 font-bold text-slate-800">
-                        {g.name} {g.verified ? <span className="text-xs text-teal-600" title="Verified local">✔︎</span> : null}
+                      <p className="flex flex-wrap items-center gap-1.5 font-bold text-slate-800">
+                        {g.name}
+                        {g.verified ? (
+                          <span
+                            className="inline-flex items-center gap-0.5 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700"
+                            title="Identity verified via government ID"
+                          >
+                            Verified Guide ✓
+                          </span>
+                        ) : null}
                       </p>
                       <p className="text-xs text-slate-500">{g.langs} · {g.years}+ yrs</p>
                       <p className="text-xs font-semibold text-amber-600">⭐ {g.rating.toFixed(1)}</p>
@@ -234,26 +244,79 @@ export default function DestinationPage({ params }: { params: Promise<{ slug: st
 
           {tab === "stays" && (
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              {data.homestays.map((h) => (
-                <div key={h.id} className="card overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={h.img} alt={h.name} className="h-36 w-full object-cover" />
-                  <div className="p-4">
-                    <p className="font-bold text-slate-800">{h.name}</p>
-                    <p className="text-xs text-slate-500">Hosted by {h.host} · ⭐ {h.rating.toFixed(1)}</p>
-                    <p className="mt-1.5 text-xs leading-relaxed text-slate-500">{h.tagline}</p>
-                    <div className="mt-3 flex items-center justify-between">
-                      <span className="text-sm font-bold text-teal-800">₹{h.price.toLocaleString("en-IN")}<span className="text-xs font-medium text-slate-400">/night</span></span>
-                      <button
-                        className="btn-primary !px-4 !py-2 text-xs"
-                        onClick={() =>
-                          setBook({ kind: "homestay", ref_id: h.id, title: h.name, dest_slug: slug, amount: h.price, host_user_id: h.host_user_id || null, unit: "/night" })
-                        }
-                      >
-                        Book
-                      </button>
+              {data.homestays.map((h) => {
+                const gallery = h.images?.length ? h.images : [h.img];
+                const active = stayPhoto[h.id] || 0;
+                return (
+                  <div key={h.id} className="card overflow-hidden">
+                    <div className="relative">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={gallery[active]} alt={h.name} className="h-36 w-full object-cover" />
+                      {gallery.length > 1 && (
+                        <span className="absolute bottom-2 right-2 rounded-full bg-slate-900/60 px-2 py-0.5 text-[10px] font-bold text-white">
+                          📷 {gallery.length} photos
+                        </span>
+                      )}
+                    </div>
+                    {gallery.length > 1 && (
+                      <div className="flex gap-1.5 px-3 pt-2">
+                        {gallery.map((src, i) => (
+                          <button key={i} onClick={() => setStayPhoto((p) => ({ ...p, [h.id]: i }))} className="overflow-hidden rounded-md transition">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={src}
+                              alt=""
+                              className={`h-10 w-14 object-cover ${i === active ? "ring-2 ring-teal-600" : "opacity-60 hover:opacity-100"}`}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    <div className="p-4">
+                      <p className="font-bold text-slate-800">{h.name}</p>
+                      <p className="text-xs text-slate-500">Hosted by {h.host} · ⭐ {h.rating.toFixed(1)}</p>
+                      <p className="mt-1.5 text-xs leading-relaxed text-slate-500">{h.tagline}</p>
+                      <div className="mt-3 flex items-center justify-between">
+                        <span className="text-sm font-bold text-teal-800">₹{h.price.toLocaleString("en-IN")}<span className="text-xs font-medium text-slate-400">/night</span></span>
+                        <button
+                          className="btn-primary !px-4 !py-2 text-xs"
+                          onClick={() =>
+                            setBook({ kind: "homestay", ref_id: h.id, title: h.name, dest_slug: slug, amount: h.price, host_user_id: h.host_user_id || null, unit: "/night" })
+                          }
+                        >
+                          Book
+                        </button>
+                      </div>
                     </div>
                   </div>
+                );
+              })}
+            </div>
+          )}
+
+          {tab === "places" && (
+            <div className="mt-4 space-y-3">
+              <p className="rounded-xl bg-teal-50/70 px-4 py-3 text-xs leading-relaxed text-teal-800">
+                📍 Hidden gems contributed by local guides — save them into your itinerary from the
+                <Link href={`/plan?dest=${slug}`} className="font-bold underline"> trip planner</Link>.
+              </p>
+              {data.guide_places.length === 0 && (
+                <p className="text-sm text-slate-400">No guide-listed places here yet.</p>
+              )}
+              {data.guide_places.map((p) => (
+                <div key={p.id} className="card flex items-center gap-4 p-3.5">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={p.img} alt={p.title} className="h-16 w-24 shrink-0 rounded-xl object-cover" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-bold text-slate-800">{p.title}</p>
+                    <p className="truncate text-xs text-slate-500">{p.desc}</p>
+                    <p className="mt-1 text-xs font-semibold text-teal-700">
+                      with {p.host_name}{p.dur ? ` · ${p.dur}` : ""} · {p.price ? `₹${p.price.toLocaleString("en-IN")}` : "Free"}
+                    </p>
+                  </div>
+                  <Link href={`/plan?dest=${slug}`} className="btn-outline hidden !px-4 !py-2 text-xs sm:inline-flex">
+                    + Itinerary
+                  </Link>
                 </div>
               ))}
             </div>

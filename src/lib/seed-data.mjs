@@ -292,12 +292,22 @@ export const GUIDES = [
 export const HOMESTAYS = [
   { dest: "rishikesh", name: "Ganga View Homestay", host: "Sunita Rawat", img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80", price: 1800, rating: 4.8, tagline: "Family home above Triveni Ghat; home-cooked Garhwali meals." },
   { dest: "rishikesh", name: "Forest Ashram Cottage", host: "Harish Bhatt", img: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=800&q=80", price: 1400, rating: 4.6, tagline: "Quiet mango-grove cottage 10 min from Lakshman Jhula." },
-  { dest: "jaipur", name: "Haveli Kalwar", host: "Kiran Kanwar", img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80", price: 2600, rating: 4.9, tagline: "250-year-old haveli with frescoed courtyards in old Amer." },
+  { dest: "jaipur", name: "Haveli Kalwar", host: "Kiran Kanwar", img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80", price: 2600, rating: 4.9, tagline: "250-year-old haveli with frescoed courtyards in old Amer.", photos: [
+    "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format&fit=crop&w=800&q=80",
+  ] },
   { dest: "goa", name: "Casa Susegad", host: "Mariana D'Souza", img: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=800&q=80", price: 3200, rating: 4.8, tagline: "Portuguese-style villa in Assagao with a baker's breakfast." },
-  { dest: "ladakh", name: "Hemis Homestay", host: "Tsering Dolker", img: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=800&q=80", price: 1500, rating: 4.9, tagline: "Traditional Ladakhi kitchen, butter tea and apricot orchards." },
+  { dest: "ladakh", name: "Hemis Homestay", host: "Tsering Dolker", img: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=800&q=80", price: 1500, rating: 4.9, tagline: "Traditional Ladakhi kitchen, butter tea and apricot orchards.", photos: [
+    "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80",
+  ] },
   { dest: "udaipur", name: "Lake Rampart Room", host: "Bhairav Singh", img: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80", price: 2200, rating: 4.7, tagline: "Rooftop room facing Lake Pichola in a living Mewari home." },
   { dest: "kashmir", name: "Dal Gate Houseboat", host: "Bashir Ahmad", img: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80", price: 3800, rating: 4.8, tagline: "Cedar houseboat with carved balconies on Nigeen Lake." },
-  { dest: "kerala", name: "Backwater Bread & Breakfast", host: "Meera Nair", img: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80", price: 2400, rating: 4.9, tagline: "Canal-side home in Alleppey; toddy-tapper's breakfast, canoe rides." },
+  { dest: "kerala", name: "Backwater Bread & Breakfast", host: "Meera Nair", img: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80", price: 2400, rating: 4.9, tagline: "Canal-side home in Alleppey; toddy-tapper's breakfast, canoe rides.", photos: [
+    "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1587381420270-3e1a5b9e6904?auto=format&fit=crop&w=800&q=80",
+  ] },
   { dest: "kerala", name: "Munnar Cardamom Villa", host: "Shaji Kurien", img: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80", price: 2900, rating: 4.7, tagline: "Plantation bungalow wrapped in cardamom forest." },
   { dest: "hampi", name: "Boulder Garden Stay", host: "Gowri Kamat", img: "https://images.unsplash.com/photo-1521401830884-6c03c1c87ebb?auto=format&fit=crop&w=800&q=80", price: 1300, rating: 4.6, tagline: "Mango-grove hut with hammocks, 5 min from the Virupaksha bazaar." },
   { dest: "meghalaya", name: "Mawlynnong Clean Village Home", host: "Ibansara Kharmawphlang", img: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=800&q=80", price: 1600, rating: 4.8, tagline: "Bamboo home in Asia's cleanest village; Khasi family dinners." },
@@ -326,8 +336,21 @@ export const REVIEWS = [
 
 export const DEMO_USERS = [
   { name: "Aarav Sharma", email: "aarav@demo.in", password: "demo1234", role: "traveler", city: "Delhi", phone: "98100 12345" },
-  { name: "Meera Nair", email: "meera@demo.in", password: "demo1234", role: "host", city: "Alleppey", phone: "98470 22334" },
-  { name: "Tsering Angmo", email: "tsering@demo.in", password: "demo1234", role: "host", city: "Leh", phone: "99069 85521" },
+  { name: "Meera Nair", email: "meera@demo.in", password: "demo1234", role: "host", city: "Alleppey", phone: "98470 22334", verification_status: "verified" },
+  { name: "Tsering Angmo", email: "tsering@demo.in", password: "demo1234", role: "host", city: "Leh", phone: "99069 85521", verification_status: "verified" },
+];
+
+// Signature spots contributed by local guides — stored in the guide_places table
+// and surfaced both on destination pages and inside the Plan Trip itinerary builder.
+export const GUIDE_PLACES = [
+  { host: "Tsering Angmo", dest: "ladakh", title: "Hemis Festival Courtyard (early entry)", desc: "Monastery courtyard before the crowds — Tsering's family holds a key.", img: "/destinations/ladakh-1.jpg", price: 1500, dur: "3 hrs" },
+  { host: "Stanzin Dorje", dest: "ladakh", title: "Nubra Sand Dunes Sunrise Ride", desc: "Two-humped camels at first light; the valley to yourself.", img: "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80", price: 2600, dur: "Full day" },
+  { host: "Rahul Menon", dest: "kerala", title: "Secret Canoe Lane 7", desc: "A narrow canal no houseboat can enter — kingfishers, toddy shacks.", img: "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?auto=format&fit=crop&w=800&q=80", price: 900, dur: "2 hrs" },
+  { host: "Lakshmi Iyer", dest: "kerala", title: "Munnar Tea-Leaf Picking Morning", desc: "Pluck alongside estate workers, then tea tasting at Lakshmi's table.", img: "https://images.unsplash.com/photo-1566054757965-8c4085344c96?auto=format&fit=crop&w=800&q=80", price: 700, dur: "Half day" },
+  { host: "Pynshaibha Lyngdoh", dest: "meghalaya", title: "Double-Decker Root Bridge Before Dawn", desc: "The 3,500 steps with grandma's stories — nobody else on the path.", img: "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=800&q=80", price: 1200, dur: "6 hrs" },
+  { host: "Deendayal Pandey", dest: "varanasi", title: "Dawn Boat Ride & Alley Breakfast Crawl", desc: "Seventh-generation Banarasi route: ghats, bells, kachori-sabzi.", img: "/destinations/varanasi.jpg", price: 800, dur: "3 hrs" },
+  { host: "Devendra Singh", dest: "jaipur", title: "Sanganer Block-Printing Studio", desc: "Print your own scarf with a family that has stamped cloth for 200 years.", img: "https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=800&q=80", price: 1100, dur: "2.5 hrs" },
+  { host: "Bashir Ahmad", dest: "kashmir", title: "Saffron Fields of Pampore at Sunset", desc: "October-only: the purple bloom and a cup of kehwa by the field.", img: "https://images.unsplash.com/photo-1508433957232-3107f5fd5995?auto=format&fit=crop&w=800&q=80", price: 1000, dur: "Evening" },
 ];
 
 // Itinerary templates used by the Plan Trip wizard (per-destination day plans)

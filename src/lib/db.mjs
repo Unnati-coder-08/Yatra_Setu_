@@ -6,7 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
-import { DESTINATIONS, GUIDES, HOMESTAYS, REVIEWS, DEMO_USERS, TRIP_TEMPLATES } from "./seed-data.mjs";
+import { DESTINATIONS, GUIDES, HOMESTAYS, REVIEWS, DEMO_USERS, TRIP_TEMPLATES, GUIDE_PLACES } from "./seed-data.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = process.env.YATRA_DATA_DIR || path.join(__dirname, "..", "..", ".data");
@@ -29,6 +29,8 @@ function init() {
       salt TEXT NOT NULL,
       role TEXT NOT NULL DEFAULT 'traveler',
       avatar TEXT DEFAULT '',
+      verification_status TEXT DEFAULT 'none',  -- none | pending | verified
+      id_doc TEXT DEFAULT '',
       created_at TEXT DEFAULT (datetime('now'))
     );
     CREATE TABLE IF NOT EXISTS sessions (
@@ -73,7 +75,21 @@ function init() {
       name TEXT NOT NULL, host TEXT, img TEXT,
       price INTEGER DEFAULT 1500, rating REAL DEFAULT 4.5,
       tagline TEXT,
+      images TEXT DEFAULT '[]',
       host_user_id INTEGER
+    );
+    CREATE TABLE IF NOT EXISTS guide_places (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      host_user_id INTEGER,
+      host_name TEXT DEFAULT '',
+      guide_id INTEGER,
+      dest_slug TEXT NOT NULL,
+      title TEXT NOT NULL,
+      desc TEXT DEFAULT '',
+      img TEXT DEFAULT '',
+      price INTEGER DEFAULT 0,
+      dur TEXT DEFAULT '',
+      created_at TEXT DEFAULT (datetime('now'))
     );
     CREATE TABLE IF NOT EXISTS trips (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -137,6 +153,7 @@ function init() {
       langs TEXT DEFAULT '',
       tagline TEXT DEFAULT '',
       img TEXT DEFAULT '',
+      images TEXT DEFAULT '[]',
       status TEXT DEFAULT 'pending',  -- pending | approved
       created_at TEXT DEFAULT (datetime('now'))
     );
@@ -148,6 +165,16 @@ function init() {
       created_at TEXT DEFAULT (datetime('now'))
     );
   `);
+  // lightweight migrations so pre-existing databases gain new columns
+  const addCol = (table, name, def) => {
+    const cols = db.prepare(`PRAGMA table_info(${table})`).all();
+    if (!cols.some((c) => c.name === name)) db.exec(`ALTER TABLE ${table} ADD COLUMN ${def}`);
+  };
+  addCol("users", "verification_status", "verification_status TEXT DEFAULT 'none'");
+  addCol("users", "id_doc", "id_doc TEXT DEFAULT ''");
+  addCol("homestays", "images", "images TEXT DEFAULT '[]'");
+  addCol("host_listings", "images", "images TEXT DEFAULT '[]'");
+
   seedIfEmpty();
 }
 
@@ -160,11 +187,11 @@ function seedIfEmpty() {
   if (row.c > 0) return;
 
   const insUser = db.prepare(
-    "INSERT INTO users (name,email,phone,city,password_hash,salt,role,avatar) VALUES (?,?,?,?,?,?,?,?)"
+    "INSERT INTO users (name,email,phone,city,password_hash,salt,role,avatar,verification_status) VALUES (?,?,?,?,?,?,?,?,?)"
   );
   for (const u of DEMO_USERS) {
     const salt = crypto.randomBytes(8).toString("hex");
-    insUser.run(u.name, u.email, u.phone || "", u.city || "", hashPassword(u.password, salt), salt, u.role, "");
+    insUser.run(u.name, u.email, u.phone || "", u.city || "", hashPassword(u.password, salt), salt, u.role, "", u.verification_status || "none");
   }
 
   const insDest = db.prepare(`INSERT INTO destinations
@@ -177,7 +204,10 @@ function seedIfEmpty() {
     "INSERT INTO guides (dest_slug,name,img,langs,years,fee,rating,verified,tagline) VALUES (?,?,?,?,?,?,?,?,?)"
   );
   const insHome = db.prepare(
-    "INSERT INTO homestays (dest_slug,name,host,img,price,rating,tagline) VALUES (?,?,?,?,?,?,?)"
+    "INSERT INTO homestays (dest_slug,name,host,img,price,rating,tagline,images) VALUES (?,?,?,?,?,?,?,?)"
+  );
+  const insPlace = db.prepare(
+    "INSERT INTO guide_places (host_user_id,host_name,guide_id,dest_slug,title,desc,img,price,dur) VALUES (?,?,?,?,?,?,?,?,?)"
   );
   const insReview = db.prepare(
     "INSERT INTO reviews (dest_slug,user_id,name,rating,text) VALUES (?,?,?,?,?)"
@@ -201,7 +231,12 @@ function seedIfEmpty() {
     insGuide.run(g.dest, g.name, g.img, g.langs, g.years, g.fee, g.rating, g.verified ? 1 : 0, g.tagline);
   }
   for (const h of HOMESTAYS) {
-    insHome.run(h.dest, h.name, h.host, h.img, h.price, h.rating, h.tagline);
+    insHome.run(h.dest, h.name, h.host, h.img, h.price, h.rating, h.tagline, JSON.stringify(h.photos || [h.img]));
+  }
+  // Local guides' signature spots — saved in the DB and woven into itineraries
+  for (const p of GUIDE_PLACES) {
+    const g = db.prepare("SELECT id, host_user_id FROM guides WHERE name = ? AND dest_slug = ?").get(p.host, p.dest);
+    insPlace.run(g?.host_user_id || null, p.host, g?.id || null, p.dest, p.title, p.desc || "", p.img || "", p.price || 0, p.dur || "");
   }
   for (const r of REVIEWS) {
     const u = db.prepare("SELECT id FROM users WHERE email = 'aarav@demo.in'").get();
@@ -270,7 +305,7 @@ export function addActivity(userId, icon, text) {
 export function userFromToken(token) {
   if (!token) return null;
   const row = getDb().prepare(
-    `SELECT u.id, u.name, u.email, u.role, u.city, u.phone, u.avatar
+    `SELECT u.id, u.name, u.email, u.role, u.city, u.phone, u.avatar, u.verification_status
      FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token = ?`
   ).get(token);
   return row || null;
